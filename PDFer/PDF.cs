@@ -18,22 +18,22 @@ abstract class PDF
         this.Pages = Pdf.PageCount;
     }
 
-    public void Save(string fileName)
-    {
-        try
-        {
-            if (!Directory.Exists(Destination))
-            {
-                Directory.CreateDirectory(Destination);
-            }
-
-            this.Pdf.SaveAs(Destination + "/" + fileName);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("The process failed; {0}", e.ToString());
-        }
-    }
+    public abstract void Save();
+    // {
+    //     try
+    //     {
+    //         if (!Directory.Exists(Destination))
+    //         {
+    //             Directory.CreateDirectory(Destination);
+    //         }
+    //
+    //         this.Pdf.SaveAs(Destination + "/" + fileName);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine("The process failed; {0}", e.ToString());
+    //     }
+    // }
     
     public abstract void Extract();
 }
