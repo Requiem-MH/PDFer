@@ -1,21 +1,48 @@
-using IronPdf;
+using iText;
+using iText.Kernel.Pdf;
 
 namespace PDFer;
-abstract class PDF
+public abstract class PDF
 {
-    protected string Path { get; }
-    protected string Source { get; }
-    protected string Destination { get; }
-    protected PdfDocument Pdf { get; }
-    protected int Pages { get; }
+    private string _path;
+    private string _src;
+    private string _dest;
+    private PdfDocument _pdf;
 
-    public PDF(string source, string destination)
+    public string Path
     {
-        this.Path = System.IO.Path.GetDirectoryName(source);
-        this.Source = source;
-        this.Destination = destination;
-        this.Pdf = PdfDocument.FromFile(source);
-        this.Pages = Pdf.PageCount;
+        get { return _path; }
+    }
+    public string Source
+    {
+        get { return _src; }
+    }
+    public string Destination
+    {
+        get { return _dest; }
+    }
+
+    public PdfDocument Pdf
+    {
+        get { return _pdf; }
+    }
+
+    public int NumberOfPages
+    {
+        get { return _pdf.GetNumberOfPages();  }
+    }
+
+    public PDF(string src, string dest)
+    {
+        this._path = System.IO.Path.GetDirectoryName(src);
+        this._src = src;
+        this._dest = dest;
+        this._pdf = new PdfDocument (new PdfReader(src));
+    }
+
+    public PdfPage GetPage(int x)
+    {
+        return this._pdf.GetPage(x);
     }
 
     public abstract void Save();
