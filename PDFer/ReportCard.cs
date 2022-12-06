@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
-using iText.Layout.Element;
 
 namespace PDFer;
 public class ReportCard : PDF
 {
     private string GenericName = "_Report Card 2022-2023 Grade 11 Cooper Adams";
-    public Dictionary<int, PdfDocument> ExtractedPdfs = new Dictionary<int, PdfDocument>();
+    // public Dictionary<int, PdfDocument> ExtractedPdfs = new Dictionary<int, PdfDocument>();
 
     public ReportCard(string source, string destination) : base(source, destination) {}
 
@@ -15,8 +14,22 @@ public class ReportCard : PDF
         throw new NotImplementedException();
     }
 
-    public override void Extract()
+    public override void Split()
     {
-        throw new NotImplementedException();
+        // foreach (int page in Enumerable.Range(1, PageCount))
+        foreach (int page in Enumerable.Range(1, 5))
+        {
+            string pageText = GetPageText(page);
+            
+            if (pageText.Contains("Report Card"))
+            {
+                Console.WriteLine($"Page {page}: Report Card");
+            }
+            else
+            {
+                Console.WriteLine($"Page {page}: Blank Page");
+            }
+
+        }
     }
 }
