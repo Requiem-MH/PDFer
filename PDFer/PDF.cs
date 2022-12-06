@@ -1,5 +1,7 @@
-using iText;
+using System.Text;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
 
 namespace PDFer;
 public abstract class PDF
@@ -7,7 +9,17 @@ public abstract class PDF
     private string _path;
     private string _src;
     private string _dest;
-    private PdfDocument _pdf;
+    private PdfReader _pdfReader;
+    private PdfDocument _pdfDocument;
+
+    public PDF(string src, string dest)
+    {
+        _path = System.IO.Path.GetDirectoryName(src);
+        _src = src;
+        _dest = dest; 
+        _pdfReader = new PdfReader(_src);
+        _pdfDocument = new PdfDocument(_pdfReader);
+    }
 
     public string Path
     {
@@ -22,27 +34,42 @@ public abstract class PDF
         get { return _dest; }
     }
 
-    public PdfDocument Pdf
+    public PdfReader PdfReader
     {
-        get { return _pdf; }
+        get { return _pdfReader; }
+    }
+    
+    public PdfDocument PdfDocument
+    {
+        get { return _pdfDocument; }
     }
 
-    public int NumberOfPages
+    public int PageCount
     {
-        get { return _pdf.GetNumberOfPages();  }
+        get { return _pdfDocument.GetNumberOfPages();  }
     }
 
-    public PDF(string src, string dest)
+    public string GetPageText(int x)
     {
-        this._path = System.IO.Path.GetDirectoryName(src);
-        this._src = src;
-        this._dest = dest;
-        this._pdf = new PdfDocument (new PdfReader(src));
+        LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
+        var page = _pdfDocument.GetPage(x);
+        string text = PdfTextExtractor.GetTextFromPage(page, strategy);
+        return text;
     }
-
-    public PdfPage GetPage(int x)
+    
+    public string GetPagesText(int x, int y)
     {
-        return this._pdf.GetPage(x);
+        StringBuilder text = new StringBuilder();
+        
+        for (int i = x; i <= y; i++)
+        {
+            LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
+            var page = _pdfDocument.GetPage(i);
+            text.Append(PdfTextExtractor.GetTextFromPage(page, strategy) + "\n");
+        }
+        
+        return text.ToString();
+        
     }
 
     public abstract void Save();
@@ -62,5 +89,5 @@ public abstract class PDF
     //     }
     // }
     
-    public abstract void Extract();
+    public abstract void Split();
 }
