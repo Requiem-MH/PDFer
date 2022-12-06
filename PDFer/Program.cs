@@ -1,14 +1,15 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using iText;
 using iText.Kernel.Pdf;
-using iText.Layout;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using PDFer;
 
-ReportCard rc = new ReportCard("/Users/michaelharrop/Projects/Work/8 - North Cache.pdf.pdf",
-    "/Users/michaelharrop/Projects/Work/Split");
+ReportCard rc = new ReportCard("/Users/michaelharrop/Projects/Work/8 - North Cache.pdf",
+    "/Users/michaelharrop/Projects/Work/Split/Test.pdf");
 
-PdfDocument pdfDoc = new PdfDocument(new PdfReader(rc.Source), new PdfWriter(rc.Destination));
-Document document = new Document(pdfDoc);
+// rc.Split();
+// Console.WriteLine(rc.GetPageText(1172));
+// Console.WriteLine(rc.GetPageText(2));
 
-pdfDoc.AddPage(rc.GetPage(1));
+Console.WriteLine(rc.GetPagesText(1, 2));
