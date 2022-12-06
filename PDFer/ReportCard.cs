@@ -20,8 +20,8 @@ public class ReportCard : PDF
         foreach (int page in Enumerable.Range(1, 5))
         {
             string pageText = GetPageText(page);
-            
-            if (pageText.Contains("Report Card"))
+
+            if (!String.IsNullOrEmpty(pageText))
             {
                 Console.WriteLine($"Page {page}: Report Card");
             }
