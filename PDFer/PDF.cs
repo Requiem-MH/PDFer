@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
@@ -9,16 +10,16 @@ public abstract class PDF
     private string _path;
     private string _src;
     private string _dest;
-    private PdfReader _pdfReader;
-    private PdfDocument _pdfDocument;
+    private PdfReader _pdfRdr;
+    private PdfDocument _pdfDocu;
 
     public PDF(string src, string dest)
     {
         _path = System.IO.Path.GetDirectoryName(src);
         _src = src;
         _dest = dest; 
-        _pdfReader = new PdfReader(_src);
-        _pdfDocument = new PdfDocument(_pdfReader);
+        _pdfRdr = new PdfReader(_src);
+        _pdfDocu = new PdfDocument(_pdfRdr);
     }
 
     public string Path
@@ -34,25 +35,25 @@ public abstract class PDF
         get { return _dest; }
     }
 
-    public PdfReader PdfReader
+    public PdfReader PdfRdr
     {
-        get { return _pdfReader; }
+        get { return _pdfRdr; }
     }
     
-    public PdfDocument PdfDocument
+    public PdfDocument PdfDocu
     {
-        get { return _pdfDocument; }
+        get { return _pdfDocu; }
     }
 
     public int PageCount
     {
-        get { return _pdfDocument.GetNumberOfPages();  }
+        get { return _pdfDocu.GetNumberOfPages();  }
     }
 
     public string GetPageText(int x)
     {
         LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
-        var page = _pdfDocument.GetPage(x);
+        var page = _pdfDocu.GetPage(x);
         string text = PdfTextExtractor.GetTextFromPage(page, strategy);
         return text;
     }
@@ -64,7 +65,7 @@ public abstract class PDF
         for (int i = x; i <= y; i++)
         {
             LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
-            var page = _pdfDocument.GetPage(i);
+            var page = _pdfDocu.GetPage(i);
             text.Append(PdfTextExtractor.GetTextFromPage(page, strategy) + "\n");
         }
         
@@ -72,7 +73,16 @@ public abstract class PDF
         
     }
 
-    public abstract void Save();
+    public string Search(string text, string pattern)
+    {
+        Regex r = new Regex(pattern);
+        Match m = r.Match(text);
+        Group g = m.Groups[1];
+
+        return g.ToString();
+    }
+
+    public abstract void Save(List<int> pages, string name);
     // {
     //     try
     //     {
