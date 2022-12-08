@@ -1,20 +1,26 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Diagnostics;
+using iText.IO.Font.Otf;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Layout.Element;
 using PDFer;
 
-ReportCard rc = new ReportCard("/Users/michaelharrop/Projects/Work/Test.pdf",
-    "/Users/michaelharrop/Projects/Work/Split/");
+Stopwatch watch = new System.Diagnostics.Stopwatch();
+watch.Start();
 
-rc.Split();
+string startPath = "/Users/michaelharrop/Projects/Work/";
+string savePath = "/Users/michaelharrop/Projects/Work/Split/";
 
-List<int> test = new List<int>();
-// Console.WriteLine(rc.GetPageText(110));
-// Console.WriteLine(rc.GetPageText(2));
-// Console.WriteLine(rc.GetPageText(2));
+string[] pdfFiles = Directory.GetFiles(startPath, "*.pdf", SearchOption.TopDirectoryOnly);
 
-// Console.WriteLine(rc.GetPagesText(1, 2));
-// Console.WriteLine(rc.GetPagesText(1, 2));
+foreach (string file in pdfFiles)
+{
+    ReportCard rc = new ReportCard(file, savePath);
+    rc.Split();
+}
+
+watch.Stop();
+Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds / 1000} sec");
