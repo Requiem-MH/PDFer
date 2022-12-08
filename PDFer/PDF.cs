@@ -83,21 +83,6 @@ public abstract class PDF
     }
 
     public abstract void Save(List<int> pages, string name);
-    // {
-    //     try
-    //     {
-    //         if (!Directory.Exists(Destination))
-    //         {
-    //             Directory.CreateDirectory(Destination);
-    //         }
-    //
-    //         this.Pdf.SaveAs(Destination + "/" + fileName);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         Console.WriteLine("The process failed; {0}", e.ToString());
-    //     }
-    // }
-    
+
     public abstract void Split();
 }
