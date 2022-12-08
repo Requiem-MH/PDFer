@@ -43,7 +43,7 @@ public class ReportCard : PDF
 
         List<int> savePageList = new List<int>();
         
-        foreach (int page in Enumerable.Range(1, 5))
+        foreach (int page in Enumerable.Range(1, PageCount))
         {
             string pageText = GetPageText(page);
             
@@ -55,7 +55,7 @@ public class ReportCard : PDF
             }
 
             string studentId = Search(pageText, @"StudentID:\s*(\d\d\d\d\d\d\d\d\d)");
-            string studentName = Search(pageText, @"Student Name:\s*(\D*)[ \t]+");
+            string studentName = Search(pageText, @"Student Name:\s*(([\ A-Za-z][A-Za-z\'\-]+\,?)*)");
             string studentGrade = Search(pageText, @"Grade:\s*(\d*)");
             
             if (!String.IsNullOrEmpty(studentId) && prevStudentId != studentId) // Start new PDF output
